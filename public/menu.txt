@@ -1,0 +1,211 @@
+#!ipxe
+
+:variables
+set lockscreen 0
+set url http://${server_ip}:${port}
+set space:hex 20:20
+set space ${space:string}
+set esc:hex 1b
+set cls ${esc:string}[2J
+echo ${cls} 
+console --x 1024 --y 768 
+
+iseq ${lockscreen} 0 && goto start  || goto lockscreen
+ 
+:lockscreen 
+echo  
+echo .......................................... 
+echo .......................................... 
+echo .......................................... 
+echo .......................................... 
+echo .......................................... 
+echo ..............${app_name} ${app_version}................ 
+echo .......................................... 
+echo .......................................... 
+echo .......................................... 
+echo .......................................... 
+echo .......................................... 
+echo  
+ 
+:first 
+echo  
+echo  
+prompt --key 0x13 ......Press secret key to continue........ && goto start  || goto tryagain
+echo  
+echo  
+ 
+:tryagain 
+echo ......Press secret key to continue........ && goto first
+ 
+:start 
+colour --rgb 0xffffff 6 
+cpair --foreground 6 --background 9 1 
+cpair --foreground 7 --background 2 2 
+cpair --foreground 7 --background 9 3 
+cpair --foreground 7 --background 9 4 
+cpair --foreground 7 --background 9 5 
+cpair --foreground 7 --background 9 6 
+cpair --foreground 7 --background 9 7 
+set cls:hex 1b:5b:4a 
+set cls ${cls:string} 
+ 
+:menu 
+menu PXE-NP 2025 ${app_version} ${boot_mode}  
+item --gap ${space} ${space} ${space} ${space} ${space} ${space} ${space} ${space} ${space} ${space} MAC:${net0/mac:hexhyp} ${space} IP:${ip} 
+item --gap 
+
+item --gap ANTIVIRUSES MENU
+    item kasper ${space} * Kaspersky
+    item eset ${space} * ESET
+    item drweb ${space} * DR.WEB  
+    item avira ${space} * AVIRA  
+item --gap OS MENU
+    item ubuntu ${space} * UBUNTU   
+    item mint ${space} * MINT 
+    
+item --gap HDD MENU
+    item ati2025 ${space} * ATI 2025   
+    item addh12 ${space} * ADD 12  
+    item easeus_iso ${space} * EaseUS Partition Master
+
+item --gap iIPXE shell
+    item reload ${space} * Reload menu
+    item shell ${space} * Drop to iPXE shell
+    item config ${space} * Go to config
+    item reboot ${space} * Reboot
+    item poweroff ${space} * Poweroff
+    item exit ${space} * Exit 
+    
+choose --default ${default_item} target && set default_item ${target} && goto ${target}
+
+:kasper
+echo Kaspersky
+echo
+set http_path public/boot/soft/antivir/kaspersky                                    || goto failed
+set nfs_path antivir/kaspersky 
+
+kernel ${url}/${http_path}/live/vmlinuz                 || goto failed
+initrd ${url}/${http_path}/live/initrd.img             || goto failed
+imgargs vmlinuz initrd=initrd.img root=/dev/nfs boot=live components locales=en_US.UTF-8 netboot=nfs nfsroot=${server_ip}:/pxe-np/${nfs_path} ip=dhcp
+boot || goto failed
+
+:eset
+echo ESET
+echo
+set http_path public/boot/soft/antivir/eset
+set nfs_path antivir/eset
+kernel ${url}/${http_path}/casper/vmlinuz                      || goto failed
+initrd ${url}/${http_path}/casper/initrd.lz                    || goto failed
+imgargs vmlinuz initrd=initrd.lz ip=dhcp netboot=nfs nfsroot=${server_ip}:/pxe-np/${nfs_path} -o user=serva,pass=avres,rw boot=casper root=/dev/nfs  quiet  --  || goto failed
+boot || goto failed
+
+:drweb
+echo Dr.Web
+echo
+echo After start please open console and enter command "sudo dhclient" to enable network
+sleep 3
+echo
+set http_path public/boot/soft/antivir/drweb
+set nfs_path antivir/drweb
+kernel ${url}/${http_path}/casper/vmlinuz                      || goto failed
+initrd ${url}/${http_path}/casper/initrd.lz                    || goto failed
+imgargs vmlinuz initrd=initrd.lz ip=dhcp netboot=nfs nfsroot=${server_ip}:/pxe-np/${nfs_path} rw boot=casper root=/dev/nfs union=aufs maybe-ubiquity quiet console=tty1 --- debian-installer/language=ru keyboard-configuration/layoutcode?=ru || goto failed
+boot || goto failed
+
+
+:ubuntu
+set http_path public/boot/soft/os/ubuntu
+set nfs_path os/ubuntu
+kernel  ${url}/${http_path}/casper/vmlinuz || goto failed
+initrd  ${url}/${http_path}/casper/initrd || goto failed
+imgargs vmlinuz initrd=initrd root=/dev/nfs boot=casper netboot=nfs nfsroot=${server_ip}:/pxe-np/${nfs_path} ip=dhcp splash quiet -- || goto failed
+boot || goto failed
+
+
+:mint
+set http_path public/boot/soft/os/mint
+set nfs_path os/mint
+kernel  ${url}/${http_path}/casper/vmlinuz || goto failed
+initrd  ${url}/${http_path}/casper/initrd.lz || goto failed
+imgargs vmlinuz initrd=initrd.lz root=/dev/nfs boot=casper netboot=nfs nfsroot=${server_ip}:/pxe-np/${nfs_path} ip=dhcp splash quiet -- || goto failed
+boot || goto failed
+
+
+:avira
+echo
+echo After start please open console and enter command "sudo dhclient" to enable network
+sleep 3
+echo
+set http_path public/boot/soft/antivir/avira
+set nfs_path antivir/avira
+kernel  ${url}/${http_path}/casper/vmlinuz || goto failed
+initrd  ${url}/${http_path}/casper/initrd.lz || goto failed
+imgargs vmlinuz initrd=initrd.lz root=/dev/nfs boot=casper netboot=nfs nfsroot=${server_ip}:/pxe-np/${nfs_path} ip=dhcp splash quiet -- || goto failed
+boot || goto failed
+
+:ati2025
+set http_path public/boot/soft/hdd/acronis/ati2025
+kernel ${url}/${http_path}/dat10.dat  || goto failed
+initrd ${url}/${http_path}/dat11.dat  || goto failed
+initrd ${url}/${http_path}/dat12.dat  || goto failed
+imgargs dat10.dat initrd=dat11.dat initrd=dat12.dat vga=791 force_modules=usbhid quiet lang=RU_ru
+boot || goto failed
+
+
+:addh12
+set http_path public/boot/soft/hdd/acronis/addh12
+kernel ${url}/${http_path}/dat14.dat      || goto failed
+initrd ${url}/${http_path}/dat15.dat      || goto failed
+initrd ${url}/${http_path}/dat16.dat      || goto failed
+imgargs dat14.dat initrd=dat15.dat initrd=dat16.dat vga=791 force_modules=usbhid quiet lang=RU_ru
+boot || goto failed
+
+
+:easeus_iso
+set http_path public/boot/soft/hdd/easeus
+sanboot --no-describe --drive 0x80 ${url}/${http_path}/EaseUS.iso || goto failed
+
+:failed
+echo
+echo Booting failed, dropping to start menu due 5 sec
+echo
+sleep 1
+echo 5
+sleep 1
+echo 4
+sleep 1
+echo 3
+sleep 1
+echo 2
+sleep 1
+echo 1
+sleep 1
+goto start
+
+:shell
+echo Type 'exit' to get the back to the menu
+shell
+set menu-timeout 0
+set submenu-timeout 0
+goto start
+
+:reboot
+reboot --warm ||
+goto start
+
+:poweroff
+poweroff ||
+goto start
+
+:config
+config ||
+goto start
+
+:exit
+echo Continuing BIOS boot order...
+sleep 1
+exit 0
+
+:reload
+chain --replace ${url}/public/menu.txt ||
+goto start

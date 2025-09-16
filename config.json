@@ -1,0 +1,26 @@
+{
+  "subnet": "192.168.0.0/24",
+  "host": "192.168.0.245",
+  "tftp_server": "192.168.0.245",
+  "bios_filename": "boot/bios/undionly.kpxe",
+  "efi32_filename": "boot/efi/bootx64.efi",
+  "efi64_filename": "boot/efi/bootx64.efi",
+  "ini_filter": true,
+  "filter_macs": [],
+  "ini_http_auth": false,
+  "ini_user": "admin",
+  "ini_ip": "192.168.0.245",
+  "ini_port": 5555,
+  "file_path_efi": "boot/efi/autoexec.ipxe",
+  "file_path_bios": "boot/bios/autoexec.ipxe",
+  "dhcp": {
+    "enable": true,
+    "filter": {
+      "black": [],
+      "white": []
+    }
+  },
+  "tftp": {
+    "enable": true
+  }
+}
