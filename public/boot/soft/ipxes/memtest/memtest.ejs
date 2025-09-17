@@ -1,0 +1,29 @@
+#!ipxe
+
+#!ipxe_group=Test tools
+
+#!ipxe_name=Memtest
+
+#!ipxe_arch=bios/efi
+
+#!ipxe_description=Memtest86+ is a stand-alone memory tester for x86 and x86-64 architecture computers. It provides a more thorough memory check than that provided by BIOS memory tests. Memtest86+ can be loaded and run either directly by a PC BIOS (legacy or UEFI) or via an intermediate bootloader that supports the Linux 16-bit, 32-bit, 64-bit, or EFI handover boot protocol. It should work on any Pentium class or later 32-bit or 64-bit x86 CPU. 
+
+#!ipxe_author=Geralt
+
+set path ${server_ip}:${port}/${ipxes_path}/data
+
+echo ${cls}
+
+iseq ${platform} pcbios && goto bios || goto efi 
+
+:efi
+echo Memtest86+ 6.2 for EFI
+echo
+kernel ${path}/memtest64.efi memtest64.efi
+boot
+
+:bios
+echo Memtest86+ 6.2 for bios
+echo
+kernel ${path}/memtest64.bin memtest64.bin
+boot
