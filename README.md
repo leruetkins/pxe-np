@@ -1,9 +1,11 @@
 # PXE-NP - GODLIKE PXE SERVER!  
 
 ## What is PXE-NP:
-**PXE-NP** is a PXE boot server that allows you to launch operating systems and useful programs over the network using [PXE](https://en.wikipedia.org/wiki/Preboot_Execution_Environment) technology. In this case, the iPXE bootloader is used. It works on both BIOS and UEFI systems, with only minor differences in the menu.  
+**PXE-NP** is a PXE boot server that allows you to launch operating systems and useful programs over the network using [PXE](https://en.wikipedia.org/wiki/Preboot_Execution_Environment) technology. In this case, the iPXE bootloader is used. It works on both BIOS and UEFI systems, with only minor differences in the menu.
 
-## How to use on Windows:
+The program works on Windows and Linux. The configuration file contains sample settings. The necessary operating system and disk images need to be downloaded separately or, if already available, extracted to the appropriate folders.  
+
+## How to use:
 
 ### 1.
 You need to choose the mode in which **PXE-NP** will operate:  
@@ -38,7 +40,20 @@ You need to choose the mode in which **PXE-NP** will operate:
     4. If you have a Mikrotik DHCP server with firmware version above 7.0, set different boot files for BIOS and UEFI according to [this guide](./docs/config_mikrotik.md).  
 
 ### 2.
-Run `PXE-NP.exe`.  
+Run `PXE-NP.exe` or `PXE-NP.elf` file.
+
+**For Linux users:** You need to give executable permissions and run as administrator to open the required ports:
+```bash
+chmod +x PXE-NP.elf
+sudo ./PXE-NP.elf
+```
+
+**Network ports used by PXE-NP:**
+- **Port 69** - TFTP server (UDP)
+- **Port 2049** - NFS server (TCP/UDP) 
+- **Port 5555** - HTTP server (TCP)
+- **Port 111** - RPC bind (TCP) - optional, continues without it if unavailable
+- **Port 67** - DHCP server (UDP) - when running in DHCP mode  
 
 ### 3.
 Boot from another machine via PXE. In BIOS settings, enable network boot and disable `Secure Boot` beforehand.  
