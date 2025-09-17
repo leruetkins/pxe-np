@@ -37,16 +37,16 @@ You need to choose the mode in which **PXE-NP** will operate:
 
     4. If you have a Mikrotik DHCP server with firmware version above 7.0, set different boot files for BIOS and UEFI according to [this guide](./docs/config_mikrotik.md).  
 
-### 3.
+### 2.
 Run `PXE-NP.exe`.  
 
-### 4.
+### 3.
 Boot from another machine via PXE. In BIOS settings, enable network boot and disable `Secure Boot` beforehand.  
 
-### 5.
+### 4.
 When prompted `Press secret key to continue...`, press the key combination `CTRL` + `S`.  
 
-### 6.
+### 5.
 Enjoy! 🎉
 
 <img width="1399" height="554" alt="изображение" src="https://github.com/user-attachments/assets/f6775e3f-68bc-4b9b-9f3b-34e1ec6ffa69" />
