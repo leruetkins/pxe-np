@@ -1,3 +1,4 @@
+
 # PXE-NP - GODLIKE PXE SERVER!  
 
 ## What is PXE-NP:
@@ -6,8 +7,6 @@
 The program works on Windows and Linux. The configuration file contains sample settings. The necessary operating system and disk images need to be downloaded separately or, if already available, extracted to the appropriate folders.  
 
 <img width="480" height="640" alt="изображение" src="https://github.com/user-attachments/assets/86004574-5620-41ad-9a66-ba3c90635fe8" /> <img width="480" height="640" alt="изображение" src="https://github.com/user-attachments/assets/9ef93bec-60c5-4c9d-a93c-2d3ff0c6d3e6" />
-
-
 
 ## How to use:
 
@@ -18,7 +17,7 @@ You need to choose the mode in which **PXE-NP** will operate:
 
 * **Option 2 - Configure your DHCP server:**  
     1. If you have a Linux DHCP server, set:  
-        ```bash
+        ```
         option space PXE;
         option arch code 93 = unsigned integer 16;
         next-server xxx.xxx.xxx.xxx;
@@ -29,7 +28,7 @@ You need to choose the mode in which **PXE-NP** will operate:
         }
         ```  
     2. If you have a Microsoft DHCP server, in your IP pool under Scope Options, add:  
-       ```bash
+       ```
        066 Boot Server Host Name "Name or address of the machine running PXE-NP, e.g., 192.168.0.2"
        067 Bootfile Name "/boot/efi/bootx64.efi"
        ```  
@@ -47,9 +46,14 @@ You need to choose the mode in which **PXE-NP** will operate:
 Run `PXE-NP.exe` or `PXE-NP.elf` file.
 
 **For Linux users:** You need to give executable permissions and run as administrator to open the required ports:
-```bash
+```
 chmod +x PXE-NP.elf
 sudo ./PXE-NP.elf
+```
+
+**Note:** You can also run PXE-NP in console mode without a graphical interface by adding the `--console` argument:
+```
+pxe-np.exe --console
 ```
 
 **Network ports used by PXE-NP:**
@@ -72,5 +76,4 @@ Enjoy! 🎉
 
 
 <img width="1121" height="509" alt="изображение" src="https://github.com/user-attachments/assets/4c10bf5f-ef2a-4298-972d-1d043c04f671" />
-
 
