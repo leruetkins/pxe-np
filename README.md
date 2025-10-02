@@ -50,6 +50,10 @@ Run `PXE-NP.exe` or `PXE-NP.elf` file.
 chmod +x PXE-NP.elf
 sudo ./PXE-NP.elf
 ```
+or try to grants the executable permission to bind privileged ports:
+```
+sudo setcap 'cap_net_bind_service=+ep' ~/pxe-np-nano/pxe-np.elf
+```
 
 **Note:** You can also run PXE-NP in console mode without a graphical interface by adding the `--console` argument:
 ```
