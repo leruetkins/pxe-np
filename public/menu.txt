@@ -86,7 +86,7 @@ set nfs_path antivir/kaspersky
 
 kernel ${url}/${http_path}/live/vmlinuz                 || goto failed
 initrd ${url}/${http_path}/live/initrd.img             || goto failed
-imgargs vmlinuz initrd=initrd.img root=/dev/nfs boot=live components locales=en_US.UTF-8 netboot=nfs nfsroot=${server_ip}:/pxe-np/${nfs_path} ip=dhcp
+imgargs vmlinuz initrd=initrd.img root=/dev/nfs boot=live components locales=en_US.UTF-8 netboot=nfs nfsroot=${nfs_ip}:/${nfs_export}/${nfs_path} ip=dhcp
 boot || goto failed
 
 :eset
@@ -96,7 +96,7 @@ set http_path public/boot/soft/antivir/eset
 set nfs_path antivir/eset
 kernel ${url}/${http_path}/casper/vmlinuz                      || goto failed
 initrd ${url}/${http_path}/casper/initrd.lz                    || goto failed
-imgargs vmlinuz initrd=initrd.lz ip=dhcp netboot=nfs nfsroot=${server_ip}:/pxe-np/${nfs_path} -o user=serva,pass=avres,rw boot=casper root=/dev/nfs  quiet  --  || goto failed
+imgargs vmlinuz initrd=initrd.lz ip=dhcp netboot=nfs nfsroot=${nfs_ip}:/${nfs_export}/${nfs_path} -o user=serva,pass=avres,rw boot=casper root=/dev/nfs  quiet  --  || goto failed
 boot || goto failed
 
 :drweb
@@ -109,7 +109,7 @@ set http_path public/boot/soft/antivir/drweb
 set nfs_path antivir/drweb
 kernel ${url}/${http_path}/casper/vmlinuz                      || goto failed
 initrd ${url}/${http_path}/casper/initrd.lz                    || goto failed
-imgargs vmlinuz initrd=initrd.lz ip=dhcp netboot=nfs nfsroot=${server_ip}:/pxe-np/${nfs_path} rw boot=casper root=/dev/nfs union=aufs maybe-ubiquity quiet console=tty1 --- debian-installer/language=ru keyboard-configuration/layoutcode?=ru || goto failed
+imgargs vmlinuz initrd=initrd.lz ip=dhcp netboot=nfs nfsroot=${nfs_ip}:/${nfs_export}/${nfs_path} rw boot=casper root=/dev/nfs union=aufs maybe-ubiquity quiet console=tty1 --- debian-installer/language=ru keyboard-configuration/layoutcode?=ru || goto failed
 boot || goto failed
 
 
@@ -118,7 +118,7 @@ set http_path public/boot/soft/os/ubuntu
 set nfs_path os/ubuntu
 kernel  ${url}/${http_path}/casper/vmlinuz || goto failed
 initrd  ${url}/${http_path}/casper/initrd || goto failed
-imgargs vmlinuz initrd=initrd root=/dev/nfs boot=casper netboot=nfs nfsroot=${server_ip}:/pxe-np/${nfs_path} ip=dhcp splash quiet -- || goto failed
+imgargs vmlinuz initrd=initrd root=/dev/nfs boot=casper netboot=nfs nfsroot=${nfs_ip}:/${nfs_export}/${nfs_path} ip=dhcp splash quiet -- || goto failed
 boot || goto failed
 
 
@@ -127,7 +127,7 @@ set http_path public/boot/soft/os/mint
 set nfs_path os/mint
 kernel  ${url}/${http_path}/casper/vmlinuz || goto failed
 initrd  ${url}/${http_path}/casper/initrd.lz || goto failed
-imgargs vmlinuz initrd=initrd.lz root=/dev/nfs boot=casper netboot=nfs nfsroot=${server_ip}:/pxe-np/${nfs_path} ip=dhcp splash quiet -- || goto failed
+imgargs vmlinuz initrd=initrd.lz root=/dev/nfs boot=casper netboot=nfs nfsroot=${nfs_ip}:/${nfs_export}/${nfs_path} ip=dhcp splash quiet -- || goto failed
 boot || goto failed
 
 
@@ -140,7 +140,7 @@ set http_path public/boot/soft/antivir/avira
 set nfs_path antivir/avira
 kernel  ${url}/${http_path}/casper/vmlinuz || goto failed
 initrd  ${url}/${http_path}/casper/initrd.lz || goto failed
-imgargs vmlinuz initrd=initrd.lz root=/dev/nfs boot=casper netboot=nfs nfsroot=${server_ip}:/pxe-np/${nfs_path} ip=dhcp splash quiet -- || goto failed
+imgargs vmlinuz initrd=initrd.lz root=/dev/nfs boot=casper netboot=nfs nfsroot=${nfs_ip}:/${nfs_export}/${nfs_path} ip=dhcp splash quiet -- || goto failed
 boot || goto failed
 
 :ati2025
@@ -164,6 +164,21 @@ boot || goto failed
 :easeus_iso
 set http_path public/boot/soft/hdd/easeus
 sanboot --no-describe --drive 0x80 ${url}/${http_path}/EaseUS.iso || goto failed
+
+:streleciso
+echo Strelec PE
+echo
+set http_path public/boot/soft/strelec
+kernel ${server_ip}:${port}/${http_path}/wimboot || goto failed
+initrd ${server_ip}:${port}/ip_json ip_json              || goto failed
+initrd ${server_ip}:${port}/boot/addons/jq.exe jq.exe              || goto failed
+initrd --name network.cmd ${server_ip}:${port}/${http_path}/network_iso.cmd network.cmd || goto failed
+initrd --name bootx64.efi ${server_ip}:${port}/${http_path}/bootx64.efi bootx64.efi || goto failed
+initrd --name bootmgr.exe ${server_ip}:${port}/${http_path}/bootmgr64.exe bootmgr.exe || goto failed
+initrd --name BCD ${server_ip}:${port}/${http_path}/BCD BCD || goto failed 
+initrd --name boot.sdi ${server_ip}:${port}/${http_path}/boot.sdi boot.sdi || goto failed
+initrd --name boot.wim ${server_ip}:${port}/${http_path}/strelec10x64.wim boot.wim || goto failed
+boot || goto failed
 
 :failed
 echo
