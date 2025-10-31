@@ -6,7 +6,9 @@
 
 The program works on Windows and Linux. The configuration file contains sample settings. The necessary operating system and disk images need to be downloaded separately or, if already available, extracted to the appropriate folders.  
 
-<img width="480" height="640" alt="изображение" src="https://github.com/user-attachments/assets/86004574-5620-41ad-9a66-ba3c90635fe8" /> <img width="480" height="640" alt="изображение" src="https://github.com/user-attachments/assets/9ef93bec-60c5-4c9d-a93c-2d3ff0c6d3e6" />
+<img  height="640" alt="Screenshot_23" src="https://github.com/user-attachments/assets/7c84505a-7d0c-438a-8aef-1c25ba90d34d" />
+<img  height="640" alt="Screenshot_22" src="https://github.com/user-attachments/assets/b47d449e-2cbc-4685-9b47-86beaca7f535" />
+
 
 ## How to use:
 
