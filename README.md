@@ -57,7 +57,9 @@ or try to grants the executable permission to bind privileged ports:
 sudo setcap 'cap_net_bind_service=+ep' ~/pxe-np-nano/pxe-np.elf
 ```
 
-**Note:** You can also run PXE-NP in console mode without a graphical interface by adding the `--console` argument:
+**Note:** After updating the binary, you must run this command again. The setcap command applies capabilities directly to the file, so replacing it with a new version removes all previously set capabilities.
+
+You can also run PXE-NP in console mode without a graphical interface by adding the `--console` argument:
 ```
 pxe-np.exe --console
 ```
